@@ -9,8 +9,11 @@ export const Route = createRootRoute({
           <Link to="/" className="text-sm text-gray-600 hover:text-gray-900 [&.active]:text-blue-600 [&.active]:font-medium">
             Home
           </Link>
-          <Link to="/about" className="text-sm text-gray-600 hover:text-gray-900 [&.active]:text-blue-600 [&.active]:font-medium">
-            About
+          <Link to="/upload" className="text-sm text-gray-600 hover:text-gray-900 [&.active]:text-blue-600 [&.active]:font-medium">
+            Upload
+          </Link>
+          <Link to="/chat" className="text-sm text-gray-600 hover:text-gray-900 [&.active]:text-blue-600 [&.active]:font-medium">
+            Chat
           </Link>
         </div>
       </nav>
