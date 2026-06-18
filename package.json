@@ -1,0 +1,16 @@
+{
+  "name": "rag-project",
+  "private": true,
+  "scripts": {
+    "dev:backend": "bun --filter @rag-project/backend dev",
+    "dev:frontend": "bun --filter @rag-project/frontend dev",
+    "dev": "bun run dev.ts",
+    "build": "bun run --filter @rag-project/backend build && bun run --filter @rag-project/frontend build",
+    "typecheck": "bun run --filter '!@rag-project/frontend' typecheck"
+  },
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
