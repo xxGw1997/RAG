@@ -2,6 +2,16 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { useState, useRef, useEffect, type FormEvent } from "react"
+import { api } from "../eden"
+
+const chatTransport = new DefaultChatTransport({ api: api.api.chat["~path"] })
+
+function hasVisibleText(parts: { type: string }[]) {
+  return parts.some((part) =>
+    (part.type === "text" || part.type === "reasoning") &&
+    Boolean((part as any).text),
+  )
+}
 
 export const Route = createFileRoute("/chat")({
   component: Chat,
@@ -10,7 +20,7 @@ export const Route = createFileRoute("/chat")({
 function Chat() {
   const [input, setInput] = useState("")
   const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport: chatTransport,
   })
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -54,6 +64,8 @@ function Chat() {
                   switch (part.type) {
                     case "text":
                       return <span key={j}>{part.text}</span>
+                    case "reasoning":
+                      return <span key={j} className="text-gray-700">{(part as any).text}</span>
                     case "data-sources": {
                       const sources = (part as any).data?.sources ?? []
                       if (sources.length === 0) return null
@@ -79,13 +91,16 @@ function Chat() {
                       return null
                   }
                 })}
-                {(!msg.parts || msg.parts.length === 0) && streaming && i === messages.length - 1 && (
-                  <span className="inline-flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                  </span>
-                )}
+                {msg.role === "assistant" &&
+                  streaming &&
+                  i === messages.length - 1 &&
+                  !hasVisibleText(msg.parts) && (
+                    <span className="inline-flex gap-1">
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </span>
+                  )}
               </div>
             </div>
           ))}

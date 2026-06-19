@@ -1,13 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
     "outDir": "dist",
     "rootDir": "src",
-    "lib": ["ESNext"]
+    "lib": ["ESNext"],
+    "emitDeclarationOnly": true
   },
   "include": ["src"]
 }
